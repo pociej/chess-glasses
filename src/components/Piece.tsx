@@ -3,7 +3,7 @@ import { XRInteractionHandler } from "@react-three/xr";
 import { useGLTF } from "@react-three/drei";
 import Mesh from "./Mesh";
 
-export type ModelType =
+export type PieceType =
   | "Bishop"
   | "King"
   | "Knight"
@@ -55,7 +55,7 @@ const materials: Record<PieceStyle, Record<string, THREE.Material>> = {
 };
 
 interface BrickProperties {
-  modelType: ModelType;
+  type: PieceType;
   style?: PieceStyle;
   scale?: number;
   onSelect?: XRInteractionHandler;
@@ -74,7 +74,7 @@ export default function Brick(
       position={props.position}
       rotation={props.rotation}
       scale={scale}
-      object={nodes[props.modelType]}
+      object={nodes[props.type]}
       materials={materials[props.style ?? "white"]}
     />
   );
