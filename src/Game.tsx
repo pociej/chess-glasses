@@ -2,10 +2,11 @@ import minBy from "lodash/minBy";
 import * as THREE from "three";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { quaternions } from "./utils/rotations";
-import InteractiveElement, { DragEvent } from "./components/InteractiveElement";
-import InteractiveGrab from "./components/InteractiveGrab";
 import Grid from "./components/Grid";
 import Box from "./components/Box";
+import Piece from "./components/Piece";
+import Grabbable, { GrabEvent } from "./components/Grabbable";
+import PivotBox from "./components/PivotBox";
 
 function quaternionDistance(a: THREE.Quaternion, b: THREE.Quaternion) {
   const dot = a.dot(b);
@@ -26,14 +27,14 @@ function isWithinBounds(
 
 export default function Game(props: JSX.IntrinsicElements["object3D"]) {
   const [cubePosition, setCubePosition] = useState<[number, number, number]>([
-    0, 0, 0,
+    0.5, 0, 0.5,
   ]);
   const [cubeRotation, setCubeRotation] = useState<[number, number, number]>([
     0, 0, 0,
   ]);
   const groupRef = useRef<THREE.Group>(null!);
-  const handleElementDrag = useCallback(
-    (e: DragEvent) => {
+  const handleOnStart = useCallback(
+    (e: GrabEvent) => {
       const { matrixWorld } = e;
       const group = groupRef.current;
       if (group) {
@@ -45,9 +46,9 @@ export default function Game(props: JSX.IntrinsicElements["object3D"]) {
         const quaternion = new THREE.Quaternion();
         const scale = new THREE.Vector3();
         matrix.decompose(position, quaternion, scale);
-        position.x = Math.round(position.x * 2) / 2;
-        position.y = Math.round(position.y * 2) / 2;
-        position.z = Math.round(position.z * 2) / 2;
+        position.x = 0.5 + Math.round(position.x - 0.5);
+        position.y = 0.5 + Math.round(position.y - 0.5);
+        position.z = 0.5 + Math.round(position.z - 0.5);
         const closestQuaternion = minBy(quaternions, (q) =>
           quaternionDistance(q, quaternion)
         );
@@ -61,7 +62,7 @@ export default function Game(props: JSX.IntrinsicElements["object3D"]) {
     },
     [setCubePosition, setCubeRotation]
   );
-  const handleElementDrop = useCallback((e: DragEvent) => {
+  const handleOnEnd = useCallback((e: GrabEvent) => {
     const { inputSource } = e;
     if (inputSource?.gamepad?.hapticActuators?.[0]) {
       inputSource.gamepad.hapticActuators[0]
@@ -90,19 +91,26 @@ export default function Game(props: JSX.IntrinsicElements["object3D"]) {
       rotation={props.rotation}
       scale={props.scale}
     >
-      <InteractiveGrab group={groupRef.current}>
+      <Grabbable targetRef={groupRef}>
         <Box position={[0, -0.06, 0]} sizeX={8} sizeY={0.1} sizeZ={8} />
-      </InteractiveGrab>
+      </Grabbable>
       <Grid size={8} position={[0, 0, 0]}>
         <lineBasicMaterial color="black" />
       </Grid>
-      <group position={cubePosition} rotation={cubeRotation}>
-        <InteractiveElement
-          onElementDrag={handleElementDrag}
-          onElementDrop={handleElementDrop}
-          showPivotOnDrag={withinBounds}
+      <Grabbable
+        position={cubePosition}
+        rotation={cubeRotation}
+        placeholder={<PivotBox position={[0, 1, 0]} sizeY={2} />}
+        onStart={handleOnStart}
+        onEnd={handleOnEnd}
+        resetOnRelease
+      >
+        <Piece
+          modelType="Knight_Dark_1"
+          style={withinBounds ? "black" : "ghost"}
+          position={[0, 1, 0]}
         />
-      </group>
+      </Grabbable>
     </group>
   );
 }
