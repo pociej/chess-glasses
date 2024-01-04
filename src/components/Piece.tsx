@@ -4,57 +4,38 @@ import { useGLTF } from "@react-three/drei";
 import Mesh from "./Mesh";
 
 export type ModelType =
-  | "Bishop_Dark_1"
-  | "Bishop_Dark_2"
-  | "Bishop_Light_1"
-  | "Bishop_Light_2"
-  | "Chess_Board"
-  | "King_Dark"
-  | "King_Light"
-  | "Knight_Dark_1"
-  | "Knight_Dark_2"
-  | "Knight_Light_1"
-  | "Knight_Light_2"
-  | "Pawn_Dark_1"
-  | "Pawn_Dark_2"
-  | "Pawn_Dark_3"
-  | "Pawn_Dark_4"
-  | "Pawn_Dark_5"
-  | "Pawn_Dark_6"
-  | "Pawn_Dark_7"
-  | "Pawn_Dark_8"
-  | "Pawn_Light_1"
-  | "Pawn_Light_2"
-  | "Pawn_Light_3"
-  | "Pawn_Light_4"
-  | "Pawn_Light_5"
-  | "Pawn_Light_6"
-  | "Pawn_Light_7"
-  | "Pawn_Light_8"
-  | "Queen_Dark"
-  | "Queen_Light"
-  | "Rook_Dark_1"
-  | "Rook_Dark_2"
-  | "Rook_Light_1"
-  | "Rook_Light_2";
+  | "Bishop"
+  | "King"
+  | "Knight"
+  | "Pawn"
+  | "Queen"
+  | "Rook";
 
 export type PieceStyle = "black" | "white" | "ghost" | "active";
 
 const materials: Record<PieceStyle, Record<string, THREE.Material>> = {
   black: {
-    "*": new THREE.MeshPhongMaterial({
+    Wood: new THREE.MeshPhongMaterial({
       color: "#000000",
       side: THREE.FrontSide,
       specular: "#ffffff",
       shininess: 25,
     }),
+    Felt: new THREE.MeshPhongMaterial({
+      color: "#185c32",
+      side: THREE.FrontSide,
+    }),
   },
   white: {
-    "*": new THREE.MeshPhongMaterial({
+    Wood: new THREE.MeshPhongMaterial({
       color: "#e1e1e1",
       side: THREE.FrontSide,
       specular: "#d5fefd",
       shininess: 25,
+    }),
+    Felt: new THREE.MeshPhongMaterial({
+      color: "#185c32",
+      side: THREE.FrontSide,
     }),
   },
   ghost: {

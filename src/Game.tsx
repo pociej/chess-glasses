@@ -20,8 +20,8 @@ function isWithinBounds(
   return (
     Math.abs(position.x) <= (size.x - 1) / 2 &&
     Math.abs(position.z) <= (size.z - 1) / 2 &&
-    position.y <= size.y - 0.5 &&
-    position.y >= 0.5
+    position.y <= size.y - 2 &&
+    position.y >= 0
   );
 }
 
@@ -47,7 +47,8 @@ export default function Game(props: JSX.IntrinsicElements["object3D"]) {
         const scale = new THREE.Vector3();
         matrix.decompose(position, quaternion, scale);
         position.x = 0.5 + Math.round(position.x - 0.5);
-        position.y = 0.5 + Math.round(position.y - 0.5);
+        // position.y = 0.5 + Math.round(position.y - 0.5);
+        position.y = Math.round(position.y);
         position.z = 0.5 + Math.round(position.z - 0.5);
         const closestQuaternion = minBy(quaternions, (q) =>
           quaternionDistance(q, quaternion)
@@ -106,9 +107,9 @@ export default function Game(props: JSX.IntrinsicElements["object3D"]) {
         resetOnRelease
       >
         <Piece
-          modelType="Knight_Dark_1"
+          modelType="Knight"
           style={withinBounds ? "black" : "ghost"}
-          position={[0, 1, 0]}
+          scale={0.75}
         />
       </Grabbable>
     </group>
