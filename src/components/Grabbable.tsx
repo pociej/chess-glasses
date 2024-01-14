@@ -15,6 +15,7 @@ interface GrabbableProps<T> {
   placeholder?: React.ReactNode;
   onStart?: (e: GrabEvent<T>) => void;
   onEnd?: (e: GrabEvent<T>) => void;
+  onMove?: (e: GrabEvent<T>) => void;
   interaction?: "onSelect" | "onSqueeze";
   children: React.ReactNode;
   targetRef?: React.RefObject<THREE.Object3D>;
@@ -29,6 +30,7 @@ export default function Grabbable<T>(props: GrabbableProps<T>) {
     placeholder,
     onStart,
     onEnd,
+    onMove,
     targetRef,
     resetOnRelease,
   } = props;
@@ -37,18 +39,26 @@ export default function Grabbable<T>(props: GrabbableProps<T>) {
 
   const handleOnMove = useCallback(
     (matrixWorld: THREE.Matrix4, inputSource: XRInputSource | null) => {
+      onMove?.({
+        payload,
+        inputSource,
+        matrixWorld,
+      });
+    },
+    [payload, onMove]
+  );
+
+  const handleOnStart = useCallback(
+    (matrixWorld: THREE.Matrix4, inputSource: XRInputSource | null) => {
+      setIsDragging(true);
       onStart?.({
         payload,
         inputSource,
         matrixWorld,
       });
     },
-    [payload, onStart]
+    [payload, onStart, setIsDragging]
   );
-
-  const handleOnStart = useCallback(() => {
-    setIsDragging(true);
-  }, [setIsDragging]);
 
   const handleOnEnd = useCallback(
     (matrixWorld: THREE.Matrix4, inputSource: XRInputSource | null) => {
