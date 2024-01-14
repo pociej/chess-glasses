@@ -25,7 +25,6 @@ function quaternionDistance(a: THREE.Quaternion, b: THREE.Quaternion) {
 //   );
 // }
 
-console.log("dupppa");
 type GamePiece = {
   type: PieceType;
   player: "white" | "black";
@@ -100,7 +99,6 @@ export default function Game(props: JSX.IntrinsicElements["object3D"]) {
   const groupRef = useRef<THREE.Group>(null!);
   const handleOnStart = useCallback(
     (e: GrabEvent<string>) => {
-      console.log("DUPA");
       const { matrixWorld } = e;
       const group = groupRef.current;
       if (group) {
