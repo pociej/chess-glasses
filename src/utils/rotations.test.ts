@@ -37,7 +37,7 @@ test("each rotation is a permutation", () => {
       expect(
         m
           .toArray()
-          .map((x) => Math.abs(x))
+          .map((x: number) => Math.abs(x))
           .sort()
       ).toEqual([0, 0, 0, 0, 0, 0, 1, 1, 1]);
     })

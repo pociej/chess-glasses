@@ -25,6 +25,7 @@ function quaternionDistance(a: THREE.Quaternion, b: THREE.Quaternion) {
 //   );
 // }
 
+console.log("dupppa");
 type GamePiece = {
   type: PieceType;
   player: "white" | "black";
@@ -63,6 +64,12 @@ const initialState: GameState = {
       position: [2.5, 0, 0.5],
       rotation: [0, 0, 0],
     },
+    "3": {
+      type: "Bishop",
+      player: "white",
+      position: [4.5, 0, 0.5],
+      rotation: [0, 0, 0],
+    },
   },
 };
 
@@ -93,6 +100,7 @@ export default function Game(props: JSX.IntrinsicElements["object3D"]) {
   const groupRef = useRef<THREE.Group>(null!);
   const handleOnStart = useCallback(
     (e: GrabEvent<string>) => {
+      console.log("DUPA");
       const { matrixWorld } = e;
       const group = groupRef.current;
       if (group) {
